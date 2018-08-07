@@ -1,0 +1,19 @@
+<!-- views/urls_index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TinyApp</title>
+</head>
+<body>
+    <ul>
+      <% for (let shortURL in urls) { %>
+      <li>
+        URL: <%= urls[shortURL] %> and short form: <%= shortURL %>
+      </li>
+      <% }; %>
+      <li><a href="#">Shorten your URL!</a></li>
+    </ul>
+</body>
+</html>
