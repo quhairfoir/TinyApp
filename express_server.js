@@ -22,9 +22,10 @@ app.get("/urls", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  urlDatabase[generateRandomString()] = req.body.longURL;
+  let newID = generateRandomString ();
+  urlDatabase[newID] = req.body.longURL;
   console.log(urlDatabase);
-  res.send("OK");
+  res.redirect(`/urls/${newID}`);
 })
 
 app.get("/urls/new", (req, res) => {
