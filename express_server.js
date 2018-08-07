@@ -21,15 +21,20 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+app.post("/urls", (req, res) => {
+  console.log(req.body);
+  res.send("OK");
+})
+
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
+
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id,
     longURL: urlDatabase
   };
   res.render("urls_show", templateVars);
-});
-
-app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
 });
 
 app.listen(PORT, () => {
