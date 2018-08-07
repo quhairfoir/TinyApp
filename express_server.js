@@ -40,3 +40,5 @@ app.get("/urls/:id", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`)
 });
+
+const generateRandomString = () => Math.random().toString(36).substr(2, 6);
