@@ -11,9 +11,10 @@
       URL: <%= shortURL %>
       Long URL: <%= longURL[shortURL] %>
     </p>
-    <form action="/urls/:longURL/update" method="POST" style="margin:150px;">
+    <form method="POST" action='/urls/<%= shortURL %>/update'>
       <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+      <input id="longURL" type="text" name="longURL" style="width: 300px" value=<%= longURL[shortURL] %> >>
       <input type="submit" value="Update">
+    </form>
 </body>
 </html>

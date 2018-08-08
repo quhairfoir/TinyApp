@@ -27,13 +27,15 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-app.post(`/urls/:longURL/update`, (req, res) => {
-  console.log(req.params.longURL);
-  //NOT YET DONE
+app.post(`/urls/:shortURL/update`, (req, res) => {
+  console.log(req.params.shortURL);
+  console.log(req.body.longURL);
+  urlDatabase[req.params.shortURL] = req.body.longURL;
+  res.redirect('/urls');
 })
 
 app.post(`/urls/:shortURL/delete`, (req, res) => {
-  console.log(req.params.shortURL);
+  console.log(req.params.id);
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
