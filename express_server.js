@@ -17,7 +17,6 @@ app.get("/", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  console.log(req.params.shortURL);
   let longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
 });
@@ -28,14 +27,11 @@ app.get("/urls", (req, res) => {
 });
 
 app.post(`/urls/:shortURL/update`, (req, res) => {
-  console.log(req.params.shortURL);
-  console.log(req.body.longURL);
   urlDatabase[req.params.shortURL] = req.body.longURL;
   res.redirect('/urls');
 })
 
 app.post(`/urls/:shortURL/delete`, (req, res) => {
-  console.log(req.params.id);
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
@@ -43,7 +39,6 @@ app.post(`/urls/:shortURL/delete`, (req, res) => {
 app.post("/urls", (req, res) => {
   let newID = generateRandomString ();
   urlDatabase[newID] = req.body.longURL;
-  console.log(urlDatabase);
   res.redirect(`/urls/${newID}`);
 });
 
