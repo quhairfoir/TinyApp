@@ -7,9 +7,7 @@
   <title>TinyApp</title>
 </head>
 <body>
-  <header>
-      <% include ../partials/header %>
-  </header>
+    <% include partials/_header %>
 
     <ul>
       <% for (let shortURL in urls) { %>
@@ -23,6 +21,6 @@
       <% }; %>
       <li><a href="#">Shorten your URL!</a></li>
     </ul>
-    
+
 </body>
 </html>
