@@ -46,6 +46,18 @@ app.get("/", (req, res) => {
   res.end("Hello!");
 });
 
+app.get("/login", (req, res) => {
+  let templateVars = {
+    username: req.cookies["username"],
+    user: ""
+  };
+  if (req.cookies["user_id"]) {
+    templateVars.user = users[req.cookies["user_id"]];
+    console.log(users[req.cookies["user_id"]]);
+  };
+  res.render("login", templateVars);
+});
+
 app.get("/urls", (req, res) => { 
   let templateVars = {
     urls: urlDatabase,
@@ -55,7 +67,7 @@ app.get("/urls", (req, res) => {
   if (req.cookies["user_id"]) {
     templateVars.user = users[req.cookies["user_id"]];
     console.log(users[req.cookies["user_id"]]);
-  }
+  };
   res.render("urls_index", templateVars);
 });
 

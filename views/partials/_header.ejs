@@ -8,19 +8,6 @@
 
   <% } %> -->
 
-  <% if (!username) { %>
-
-    <form method="POST" action='/login'>
-      <label for="username">Enter your username:</label>
-      <input id="username" type="text" name="username" style="width: 300px" placeholder="username" >
-      <input type="submit" value="Sign In">
-    </form>
-
-    <% } %> 
-
-    <h3><%= username %></h3>
-    <form method="POST" action="/logout">
-      <input type="submit" value="Logout">
-    </form> 
+  
 
 </header>
