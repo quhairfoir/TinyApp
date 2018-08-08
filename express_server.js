@@ -43,7 +43,7 @@ app.post("/register", (req, res) => {
 })
 
 app.get("/", (req, res) => {
-  res.end("Hello!");
+  res.redirect("/urls");
 });
 
 app.get("/login", (req, res) => {
