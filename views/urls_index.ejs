@@ -16,7 +16,7 @@
       </li>
         <a href="/urls/<%= shortURL %>">Edit</a>
         <form method="POST" action=<%=`/urls/${shortURL}/delete`%> >
-          <button>Delete</button>
+          <input type="submit" value="Delete">
         </form>
       <% }; %>
       <li><a href="#">Shorten your URL!</a></li>
