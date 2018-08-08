@@ -12,7 +12,9 @@
       <li>
         URL: <%= urls[shortURL] %> and short form: <%= shortURL %>
       </li>
-      <li><form method="POST" action=<%=`/urls/${shortURL}/delete`%>><button>Delete?</button></form></li>
+        <form method="POST" action=<%=`/urls/${shortURL}/delete`%> >
+          <button>Delete</button>
+        </form>
       <% }; %>
       <li><a href="#">Shorten your URL!</a></li>
     </ul>
