@@ -29,7 +29,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.post("/register", (req, res) => {
   if (!req.body.email || !req.body.password){
-    console.log(res);
     res.status(400);
     res.send("400: Email and password required!");
   } else {
@@ -50,8 +49,13 @@ app.get("/", (req, res) => {
 app.get("/urls", (req, res) => { 
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    username: req.cookies["username"],
+    user: ""
   };
+  if (req.cookies["user_id"]) {
+    templateVars.user = users[req.cookies["user_id"]];
+    console.log(users[req.cookies["user_id"]]);
+  }
   res.render("urls_index", templateVars);
 });
 
@@ -78,6 +82,8 @@ app.post("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
+    users: users,
+    user_id: req.cookies["user_id"],
     username: req.cookies["username"]
   };
   res.render("urls_new", templateVars);
@@ -86,6 +92,8 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id,
     longURL: urlDatabase,
+    users: users,
+    user_id: req.cookies["user_id"],
     username: req.cookies["username"]
   };
   res.render("urls_show", templateVars);
@@ -93,6 +101,8 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/register", (req, res) => {
   let templateVars = {
+    users: users,
+    user_id: req.cookies["user_id"],
     username: req.cookies["username"]
   };
   res.render("register", templateVars);

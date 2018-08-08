@@ -2,6 +2,11 @@
 
 <header>
   <h1>Tiny App</h1>
+  
+  <!-- <% if (user) { %>
+    <h2><%= user.id %> | <%= user.email %></h2>
+
+  <% } %> -->
 
   <% if (!username) { %>
 
@@ -13,9 +18,9 @@
 
     <% } %> 
 
-    <h2><%= username %></h2>
+    <h3><%= username %></h3>
     <form method="POST" action="/logout">
       <input type="submit" value="Logout">
-    </form>    
+    </form> 
 
 </header>
