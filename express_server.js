@@ -40,7 +40,8 @@ app.post("/register", (req, res) => {
   res.cookie("user_id", newID);
   res.redirect("/urls");
   }
-})
+  console.log(users);
+});
 
 app.get("/", (req, res) => {
   res.redirect("/urls");
@@ -48,8 +49,8 @@ app.get("/", (req, res) => {
 
 app.post("/login", (req, res) => {
   for (let user in users) {
-    if (users.user.email === req.body.email && users.user.password === req.body.password) {
-      res.cookie("user_id", users.user.id);
+    if (users[user].email === req.body.email && users[user].password === req.body.password) {
+      res.cookie("user_id", users[user].id);
       res.redirect("/");
     } else {
       res.status(403);
@@ -72,7 +73,6 @@ app.get("/login", (req, res) => {
 app.get("/urls", (req, res) => { 
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"],
     user: "",
     loginPage: false
   };
@@ -107,7 +107,6 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     users: users,
     user_id: req.cookies["user_id"],
-    username: req.cookies["username"],
     loginPage: false
   };
   res.render("urls_new", templateVars);
@@ -118,7 +117,6 @@ app.get("/urls/:id", (req, res) => {
     longURL: urlDatabase,
     users: users,
     user_id: req.cookies["user_id"],
-    username: req.cookies["username"],
     loginPage: false
   };
   res.render("urls_show", templateVars);
@@ -126,22 +124,15 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/register", (req, res) => {
   let templateVars = {
-    users: users,
+    user: users,
     user_id: req.cookies["user_id"],
-    username: req.cookies["username"],
     loginPage: false
   };
   res.render("register", templateVars);
 });
 
-app.post("/login", (req, res) => {
-  
-  res.cookie('username', req.body.username);
-  res.redirect('/urls');
-});
-
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls");
 });
 

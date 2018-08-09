@@ -3,7 +3,7 @@
 <header>
   <h1>Tiny App</h1>
   
-  <% if (user) { %>
+  <% if (user.email) { %>
     <h2>Hello, <%= user.email %></h2>
     <form method="POST" action="/logout">
       <input type="submit" value="Logout">
