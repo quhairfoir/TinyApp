@@ -123,8 +123,10 @@ app.get("/urls/new", (req, res) => {
   };
   if (req.cookies["user_id"]) {
     templateVars.user = users[req.cookies["user_id"]];
-  };
-  res.render("urls_new", templateVars);
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/urls/:id", (req, res) => {
