@@ -87,6 +87,7 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/urls", (req, res) => { 
+  let userFound = false;
   let templateVars = {
     urls: urlDatabase,
     user: "",
@@ -95,9 +96,13 @@ app.get("/urls", (req, res) => {
   };
   if (req.cookies["user_id"]) {
     templateVars.user = users[req.cookies["user_id"]];
+    userFound = true;
   };
-  console.log("This is urlDatabase at main page:", urlDatabase);
-  res.render("urls_index", templateVars);
+  if (userFound){
+    res.render("urls_index", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {
