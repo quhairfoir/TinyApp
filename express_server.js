@@ -30,12 +30,12 @@ const users = {
   "userRandomID": {
     id: "userRandomID", 
     email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
+    password: bcrypt.hashSync("purple-monkey-dinosaur", 10)
   },
  "user2RandomID": {
     id: "user2RandomID", 
     email: "user2@example.com", 
-    password: "dishwasher-funk"
+    password: bcrypt.hashSync("dishwasher-funk", 10)
   }
 }
 
@@ -59,10 +59,10 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  // if (req.session.user_id){
+  if (req.session.user_id){
     res.redirect("/urls");
-  // }
-  // res.redirect("/login");
+  }
+  res.redirect("/login");
 });
 
 app.post("/login", (req, res) => {
@@ -96,31 +96,34 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/urls", (req, res) => { 
-  // let userFound = false;
+  let userFound = false;
   let templateVars = {
     urls: urlDatabase,
     user: "",
     loginPage: false,
     registerPage: false
   };
-  // if (req.session.user_id) {
-  //   templateVars.user = users[req.session.user_id];
-  //   userFound = true;
-  // };
-  // if (userFound){
+  if (req.session.user_id) {
+    templateVars.user = users[req.session.user_id];
+    userFound = true;
+  };
+  if (userFound){
     res.render("urls_index", templateVars);
-  // } else {
-  //   res.redirect("/login");
-  // }
+  } else {
+    res.status(401);
+    res.send("Error 401: Must be signed in to see this page");
+  }
 });
 
 app.post(`/urls/:shortURL/update`, (req, res) => {
+  console.log("This is urlDatabase before update:", urlDatabase);
   let userFound = false;
   if (req.session.user_id === urlDatabase[req.params.shortURL].user){
     userFound = true;
   };
   if (userFound){
-    urlDatabase[req.params.shortURL] = req.body.longURL;
+    urlDatabase[req.params.shortURL].longURL = req.body.longURL;
+    console.log("This is urlDatabase after update:", urlDatabase);
     res.redirect('/urls');
   } else {
     res.status(401);
@@ -166,6 +169,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
+  let userFound = false;
+  let idFound = false;
   let templateVars = { 
     shortURL: req.params.id,
     urls: urlDatabase,
@@ -174,11 +179,27 @@ app.get("/urls/:id", (req, res) => {
     loginPage: false,
     registerPage: false
   };
-  if (req.session.user_id) {
+  if (req.session.user_id) {  
     templateVars.user = users[req.session.user_id];
+    userFound = true;
   };
-  res.render("urls_show", templateVars);
+  for (let shortID in urlDatabase) {
+    if (req.params.id === shortID){
+      idFound = true;
+    }
+  };
+  if (!userFound && idFound) {
+    res.status(401);
+    res.send("Error 401: you must sign in to see this page");
+  } else if (idFound && userFound) {
+    res.render("urls_show", templateVars);
+  } else {
+    res.status(404);
+    res.send("Error 404: page not found");
+  }
 });
+
+
 
 app.get("/register", (req, res) => {
   let templateVars = {

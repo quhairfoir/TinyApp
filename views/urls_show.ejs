@@ -9,12 +9,15 @@
 <body style="font-size:20px; padding:50px;">
     <% include partials/_header %>
     
-    <p>
-      URL: <%= shortURL %>
+    <div>
+      Short URL: <%= shortURL %>
+    </div>
+    <div>
       Long URL: <%= urls[shortURL].longURL %>
-    </p>
+    </div>
+  
     <form method="POST" action='/urls/<%= shortURL %>/update'>
-      <label for="longURL">Enter a URL:</label>
+      <label for="longURL">Change long URL:</label>
       <input id="longURL" type="text" name="longURL" style="width: 300px" value=<%= urls[shortURL].longURL %> >
       <input type="submit" value="Update">
     </form>
