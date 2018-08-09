@@ -48,16 +48,25 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
+  let userFound = false;
+  let userName = "";
   for (let user in users) {
     if (users[user].email === req.body.email && users[user].password === req.body.password) {
-      res.cookie("user_id", users[user].id);
-      res.redirect("/");
-    } else {
-      res.status(403);
-      res.send("Error 403: Email and password do not match");
-    }
+      userFound = true;
+      userName = users[user].id;
+    } 
+  }
+  if (userFound){
+    res.cookie("user_id", userName);
+    res.redirect("/");
+  } else {
+    res.status(403);
+    res.send("Error 403: Email and password do not match");
   }
 });
+
+
+
 
 app.get("/login", (req, res) => {
   let templateVars = {
