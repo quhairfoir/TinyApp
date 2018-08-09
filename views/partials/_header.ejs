@@ -1,18 +1,25 @@
 <!-- views/partials/_header.ejs-->
 
 <header>
-  <h1>Tiny App</h1>
+  <h3><a href="/">Tiny App</a></h3>
   
-  <% if (user.email) { %>
+  <% if (user) { %>
     <h2>Hello, <%= user.email %></h2>
     <form method="POST" action="/logout">
       <input type="submit" value="Logout">
     </form> 
 
-  <% } if (!loginPage) { %>
+  <% } else {
+    
+    if (!loginPage) { %>
 
-  <a href="/login"><button>Login</button></a>
+    <a href="/login"><button>Login</button></a>
+      
+    <% } if (!registerPage) { %>
+    
+    <a href="/register"><button>Register</button></a>
+  <% }} %>
   
-  <% } %>
+  
 
 </header>

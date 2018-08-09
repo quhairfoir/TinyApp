@@ -44,7 +44,10 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.redirect("/urls");
+  if (req.cookies["user_id"]){
+    res.redirect("/urls");
+  }
+  res.redirect("/login");
 });
 
 app.post("/login", (req, res) => {
@@ -57,7 +60,7 @@ app.post("/login", (req, res) => {
     } 
   }
   if (userFound){
-    res.cookie("user_id", userName);
+    res.cookie("user_id", userName, { maxAge: 10 * 60 * 1000});
     res.redirect("/");
   } else {
     res.status(403);
@@ -65,13 +68,11 @@ app.post("/login", (req, res) => {
   }
 });
 
-
-
-
 app.get("/login", (req, res) => {
   let templateVars = {
     user: "",
-    loginPage: true
+    loginPage: true,
+    registerPage: false
   };
   if (req.cookies["user_id"]) {
     templateVars.user = users[req.cookies["user_id"]];
@@ -83,7 +84,8 @@ app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
     user: "",
-    loginPage: false
+    loginPage: false,
+    registerPage: false
   };
   if (req.cookies["user_id"]) {
     templateVars.user = users[req.cookies["user_id"]];
@@ -114,28 +116,32 @@ app.post("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    users: users,
+    user: "",
     user_id: req.cookies["user_id"],
-    loginPage: false
+    loginPage: false,
+    registerPage: false
   };
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id,
+  let templateVars = { 
+    shortURL: req.params.id,
     longURL: urlDatabase,
-    users: users,
+    user: "",
     user_id: req.cookies["user_id"],
-    loginPage: false
+    loginPage: false,
+    registerPage: false
   };
   res.render("urls_show", templateVars);
 });
 
 app.get("/register", (req, res) => {
   let templateVars = {
-    user: users,
+    user: "",
     user_id: req.cookies["user_id"],
-    loginPage: false
+    loginPage: false,
+    registerPage: true
   };
   res.render("register", templateVars);
 });

@@ -6,8 +6,11 @@
   <meta charset="UTF-8">
   <title>TinyApp</title>
 </head>
-<body>
+<body style="font-size:20px; padding:50px;">
     <% include partials/_header %>
+
+    <h1><%= user_id %></h1>
+    
     <p>
       URL: <%= shortURL %>
       Long URL: <%= longURL[shortURL] %>
