@@ -42,19 +42,30 @@ const users = {
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.post("/register", (req, res) => {
+  let userExists = false;
   if (!req.body.email || !req.body.password){
     res.status(400);
     res.send("400: Email and password required!");
   } else {
-  let newID = generateRandomString();
-  const password = req.body.password;
-  const hashedPassword = bcrypt.hashSync(password, 10);
-  users[newID] = {};
-  users[newID].id = newID;
-  users[newID].email = req.body.email;
-  users[newID].password = hashedPassword;
-  req.session.user_id = newID;
-  res.redirect("/urls");
+    for (let user in users) {
+      if (users[user].email === req.body.email) {
+        userExists = true;
+      }; 
+    };
+  }
+  if (!userExists) {
+    let newID = generateRandomString();
+    const password = req.body.password;
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    users[newID] = {};
+    users[newID].id = newID;
+    users[newID].email = req.body.email;
+    users[newID].password = hashedPassword;
+    req.session.user_id = newID;
+    res.redirect("/urls");
+  } else {
+    res.status(409);
+    res.send("409: Email address already has user account.");
   }
 });
 
@@ -79,7 +90,7 @@ app.post("/login", (req, res) => {
     res.redirect("/");
   } else {
     res.status(403);
-    res.send("Error 403: Email and password do not match");
+    res.send("Error 403: Invalid email and/or password");
   }
 });
 
@@ -211,24 +222,37 @@ app.get("/urls/:id", (req, res) => {
 app.get("/register", (req, res) => {
   let templateVars = {
     user: "",
-    user_id: req.session.user_id,
+    // user_id: req.session.user_id,
     loginPage: false,
     registerPage: true
   };
   if (req.session.user_id) {
-    templateVars.user = users[req.session.user_id];
-  };
+    // templateVars.user = users[req.session.user_id];
+    res.redirect("/urls");
+  } else {
   res.render("register", templateVars);
+  }
 });
 
 app.post("/logout", (req, res) => {
   req.session = null;
-  res.redirect("/urls");
+  res.redirect("/login");
 });
 
 app.get("/u/:shortURL", (req, res) => {
+  let urlFound = false;
+  for (let id in urlDatabase) {
+    if (req.params.shortURL === id){
+      urlFound = true;
+    }
+  };
+  if (urlFound){
   let link = urlDatabase[req.params.shortURL].longURL;
   res.redirect(link);
+  } else {
+    res.status(404);
+    res.send("Error 404: page not found");
+  }
 });
 
 app.listen(PORT, () => {
