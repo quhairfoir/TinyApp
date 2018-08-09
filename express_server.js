@@ -46,7 +46,6 @@ app.post("/register", (req, res) => {
   res.cookie("user_id", newID);
   res.redirect("/urls");
   }
-  console.log(users);
 });
 
 app.get("/", (req, res) => {
@@ -99,15 +98,11 @@ app.get("/urls", (req, res) => {
     userFound = true;
   };
   if (userFound){
+    console.log(urlDatabase);
     res.render("urls_index", templateVars);
   } else {
     res.redirect("/login");
   }
-});
-
-app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
 });
 
 app.post(`/urls/:shortURL/update`, (req, res) => {
@@ -144,7 +139,7 @@ app.post("/urls", (req, res) => {
   urlDatabase[newID].longURL = req.body.longURL;
   urlDatabase[newID].user = req.cookies["user_id"];
   console.log(urlDatabase);
-  res.redirect(`/urls/${newID}`);
+  res.redirect("/urls");
 });
 
 app.get("/urls/new", (req, res) => {
@@ -193,6 +188,11 @@ app.get("/register", (req, res) => {
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
   res.redirect("/urls");
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  let longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
 });
 
 app.listen(PORT, () => {
