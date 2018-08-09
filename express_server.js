@@ -96,6 +96,7 @@ app.get("/urls", (req, res) => {
   if (req.cookies["user_id"]) {
     templateVars.user = users[req.cookies["user_id"]];
   };
+  console.log("This is urlDatabase at main page:", urlDatabase);
   res.render("urls_index", templateVars);
 });
 
@@ -105,13 +106,31 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.post(`/urls/:shortURL/update`, (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.longURL;
-  res.redirect('/urls');
+  let userFound = false;
+  if (req.cookies["user_id"] === urlDatabase[req.params.shortURL].user){
+    userFound = true;
+  };
+  if (userFound){
+    urlDatabase[req.params.shortURL] = req.body.longURL;
+    res.redirect('/urls');
+  } else {
+    res.status(401);
+    res.send("Error 401: Only the user who created this link can edit!");
+  };
 });
 
 app.post(`/urls/:shortURL/delete`, (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
+  let userFound = false;
+  if (req.cookies["user_id"] === urlDatabase[req.params.shortURL].user){
+    userFound = true;
+  };
+  if (userFound){
+    delete urlDatabase[req.params.shortURL];
+    res.redirect("/urls");
+  } else {
+    res.status(401);
+    res.send("Error 401: Only the user who created this link can delete!");
+  };
 });
 
 app.post("/urls", (req, res) => {
@@ -141,7 +160,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = { 
     shortURL: req.params.id,
-    longURL: urlDatabase,
+    urls: urlDatabase,
     user: "",
     user_id: req.cookies["user_id"],
     loginPage: false,
