@@ -59,10 +59,10 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  if (req.session.user_id){
+  // if (req.session.user_id){
     res.redirect("/urls");
-  }
-  res.redirect("/login");
+  // }
+  // res.redirect("/login");
 });
 
 app.post("/login", (req, res) => {
@@ -96,22 +96,22 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/urls", (req, res) => { 
-  let userFound = false;
+  // let userFound = false;
   let templateVars = {
     urls: urlDatabase,
     user: "",
     loginPage: false,
     registerPage: false
   };
-  if (req.session.user_id) {
-    templateVars.user = users[req.session.user_id];
-    userFound = true;
-  };
-  if (userFound){
+  // if (req.session.user_id) {
+  //   templateVars.user = users[req.session.user_id];
+  //   userFound = true;
+  // };
+  // if (userFound){
     res.render("urls_index", templateVars);
-  } else {
-    res.redirect("/login");
-  }
+  // } else {
+  //   res.redirect("/login");
+  // }
 });
 
 app.post(`/urls/:shortURL/update`, (req, res) => {
