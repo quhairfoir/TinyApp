@@ -8,8 +8,14 @@ app.set('view engine', 'ejs');
 app.use(cookies());
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": { 
+    longURL: "http://www.lighthouselabs.ca",
+    user: "userRandomID"
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    user: "user2RandomID"
+  }
 };
 
 const users = {
@@ -110,7 +116,10 @@ app.post(`/urls/:shortURL/delete`, (req, res) => {
 
 app.post("/urls", (req, res) => {
   let newID = generateRandomString ();
-  urlDatabase[newID] = req.body.longURL;
+  urlDatabase[newID] = {};
+  urlDatabase[newID].longURL = req.body.longURL;
+  urlDatabase[newID].user = req.cookies["user_id"];
+  console.log(urlDatabase);
   res.redirect(`/urls/${newID}`);
 });
 
