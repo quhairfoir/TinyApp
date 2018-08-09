@@ -63,7 +63,7 @@ app.post("/login", (req, res) => {
   let userFound = false;
   let userName = "";
   for (let user in users) {
-    if (users[user].email === req.body.email && users[user].password === req.body.password) {
+    if (users[user].email === req.body.email && bcrypt.compareSync(req.body.password, users[user].password)) {
       userFound = true;
       userName = users[user].id;
     } 
