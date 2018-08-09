@@ -4,12 +4,15 @@
   <h1>Tiny App</h1>
   
   <% if (user) { %>
-    <h2><%= user.id %> | <%= user.email %></h2>
+    <h2>Hello, <%= user.email %></h2>
+    <form method="POST" action="/logout">
+      <input type="submit" value="Logout">
+    </form> 
 
-  <% } %>
+  <% } if (!loginPage) { %>
+
+  <a href="/login"><button>Login</button></a>
   
-  <!-- <form method="POST" action="/logout">
-    <input type="submit" value="Logout">
-  </form>  -->
+  <% } %>
 
 </header>

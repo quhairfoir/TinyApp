@@ -46,14 +46,25 @@ app.get("/", (req, res) => {
   res.redirect("/urls");
 });
 
+app.post("/login", (req, res) => {
+  for (let user in users) {
+    if (users.user.email === req.body.email && users.user.password === req.body.password) {
+      res.cookie("user_id", users.user.id);
+      res.redirect("/");
+    } else {
+      res.status(403);
+      res.send("Error 403: Email and password do not match");
+    }
+  }
+});
+
 app.get("/login", (req, res) => {
   let templateVars = {
-    username: req.cookies["username"],
-    user: ""
+    user: "",
+    loginPage: true
   };
   if (req.cookies["user_id"]) {
     templateVars.user = users[req.cookies["user_id"]];
-    console.log(users[req.cookies["user_id"]]);
   };
   res.render("login", templateVars);
 });
@@ -62,11 +73,11 @@ app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
     username: req.cookies["username"],
-    user: ""
+    user: "",
+    loginPage: false
   };
   if (req.cookies["user_id"]) {
     templateVars.user = users[req.cookies["user_id"]];
-    console.log(users[req.cookies["user_id"]]);
   };
   res.render("urls_index", templateVars);
 });
@@ -96,7 +107,8 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     users: users,
     user_id: req.cookies["user_id"],
-    username: req.cookies["username"]
+    username: req.cookies["username"],
+    loginPage: false
   };
   res.render("urls_new", templateVars);
 });
@@ -106,7 +118,8 @@ app.get("/urls/:id", (req, res) => {
     longURL: urlDatabase,
     users: users,
     user_id: req.cookies["user_id"],
-    username: req.cookies["username"]
+    username: req.cookies["username"],
+    loginPage: false
   };
   res.render("urls_show", templateVars);
 });
@@ -115,12 +128,14 @@ app.get("/register", (req, res) => {
   let templateVars = {
     users: users,
     user_id: req.cookies["user_id"],
-    username: req.cookies["username"]
+    username: req.cookies["username"],
+    loginPage: false
   };
   res.render("register", templateVars);
 });
 
 app.post("/login", (req, res) => {
+  
   res.cookie('username', req.body.username);
   res.redirect('/urls');
 });
