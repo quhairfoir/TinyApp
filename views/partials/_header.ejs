@@ -4,7 +4,7 @@
   <h3><a href="/">Tiny App</a></h3>
   
   <% if (user) { %>
-    <h2>Hello, <%= user.email %></h2>
+    <h5>Logged in as: <%= user.email %></h5>
     <form method="POST" action="/logout">
       <input type="submit" value="Logout">
     </form> 

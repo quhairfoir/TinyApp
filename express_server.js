@@ -121,6 +121,9 @@ app.get("/urls/new", (req, res) => {
     loginPage: false,
     registerPage: false
   };
+  if (req.cookies["user_id"]) {
+    templateVars.user = users[req.cookies["user_id"]];
+  };
   res.render("urls_new", templateVars);
 });
 
@@ -133,6 +136,9 @@ app.get("/urls/:id", (req, res) => {
     loginPage: false,
     registerPage: false
   };
+  if (req.cookies["user_id"]) {
+    templateVars.user = users[req.cookies["user_id"]];
+  };
   res.render("urls_show", templateVars);
 });
 
@@ -142,6 +148,9 @@ app.get("/register", (req, res) => {
     user_id: req.cookies["user_id"],
     loginPage: false,
     registerPage: true
+  };
+  if (req.cookies["user_id"]) {
+    templateVars.user = users[req.cookies["user_id"]];
   };
   res.render("register", templateVars);
 });
