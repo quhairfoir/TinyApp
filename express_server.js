@@ -171,6 +171,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let userFound = false;
   let idFound = false;
+  let match = false;
   let templateVars = { 
     shortURL: req.params.id,
     urls: urlDatabase,
@@ -188,10 +189,16 @@ app.get("/urls/:id", (req, res) => {
       idFound = true;
     }
   };
-  if (!userFound && idFound) {
+  if (idFound && userFound) {
+    if (urlDatabase[req.params.id].user === req.session.user_id){
+      match = true;
+    }
+  };
+  console.log("This is idFound, userFound, match:", idFound, userFound, match)
+  if (userFound && idFound && !match) {
     res.status(401);
     res.send("Error 401: you must sign in to see this page");
-  } else if (idFound && userFound) {
+  } else if (idFound && userFound && match) {
     res.render("urls_show", templateVars);
   } else {
     res.status(404);
