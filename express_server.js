@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookies = require("cookie-parser");
+const bcrypt = require("bcrypt");
+
 const app = express();
 const PORT = 8000;
 
@@ -39,10 +41,12 @@ app.post("/register", (req, res) => {
     res.send("400: Email and password required!");
   } else {
   let newID = generateRandomString();
+  const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
   users[newID] = {};
   users[newID].id = newID;
   users[newID].email = req.body.email;
-  users[newID].password = req.body.password;
+  users[newID].password = hashedPassword;
   res.cookie("user_id", newID);
   res.redirect("/urls");
   }
