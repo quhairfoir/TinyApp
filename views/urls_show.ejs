@@ -27,7 +27,7 @@
     Long URL: <%= urls[shortURL].longURL %>
   </div>
   <div>
-    <p>This link has been visited <%= urls[shortURL].count %> times.</p>
+    <p>This link has been visited <%= urls[shortURL].visitCount %> times by <%= urls[shortURL].uniqueVisitCount %> unique <% if (urls[shortURL].uniqueVisitCount === 1) { %> visitor<% } else { %> visitors<% } %>.</p>
   </div>
   
   <form method="POST" style="margin:150px;" action=`/urls/<%= shortURL %>/update`>

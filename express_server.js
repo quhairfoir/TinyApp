@@ -29,12 +29,14 @@ const urlDatabase = {
   "b2xVn2": { 
     longURL: "http://www.lighthouselabs.ca",
     user: "userRandomID",
-    count: 2
+    visitCount: 2,
+    uniqueVisitCount: 1
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
     user: "user2RandomID",
-    count: 6
+    visitCount: 6,
+    uniqueVisitCount: 3
   }
 };
 
@@ -166,7 +168,8 @@ app.post("/urls", (req, res) => {
   urlDatabase[newID] = {
     longURL: req.body.longURL,
     user: req.session.user_id,
-    count: 0
+    visitCount: 0,
+    uniqueVisitCount: 0
   };
   res.redirect("/urls");
 });
@@ -246,9 +249,12 @@ app.get("/u/:shortURL", (req, res) => {
   for (let id in urlDatabase) {
     if (req.params.shortURL === id) {
       urlFound = true;
-      urlDatabase[id].count++;
+      urlDatabase[id].visitCount++;
+      if (!req.session.user_id) {
+        urlDatabase[id].uniqueVisitCount++;
+      }
     }
-  };
+  }
   if (urlFound) {
     let link = urlDatabase[req.params.shortURL].longURL;
     res.redirect(link);
