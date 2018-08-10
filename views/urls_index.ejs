@@ -23,7 +23,7 @@
   <% if (user) { %>
     <% for (let shortURL in urls) { %>
       <ul>
-        <li><a href=`/u/:${shortURL}`><%= shortURL %></a>: <%= urls[shortURL].longURL %> </li>
+        <li><a href=<%=`/u/${shortURL}`%>> <%= shortURL %> </a>: <%= urls[shortURL].longURL %> </li>
       </ul>
       <form method="POST" action=<%=`/urls/${shortURL}/delete`%> >
         <input type="submit" value="Delete">
