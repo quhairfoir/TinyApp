@@ -25,6 +25,7 @@ const getUsersURLs = function(user_id) {
   return idObj;
 };
 
+//unique visitors considered to be any non user that follows the link
 const urlDatabase = {
   "b2xVn2": { 
     longURL: "http://www.lighthouselabs.ca",
