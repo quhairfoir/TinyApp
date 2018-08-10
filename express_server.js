@@ -6,14 +6,24 @@ const bcrypt = require("bcrypt");
 const app = express();
 const PORT = 8000;
 
-app.set('view engine', 'ejs');
-app.use(cookieSession({
-  name: 'session',
-  keys: ['key1', 'key2'],
+app.set("view engine", "ejs");
 
-  // Cookie Options
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieSession({
+  name: "session",
+  keys: ["key1", "key2"],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
+
+const getUsersURLs = function(user_id) {
+  let idObj = {};
+  for (let shortURL in urlDatabase){
+    if (urlDatabase[shortURL].user === user_id){
+      idObj[shortURL] = urlDatabase[shortURL];
+    }
+  }
+  return idObj;
+};
 
 const urlDatabase = {
   "b2xVn2": { 
@@ -39,28 +49,30 @@ const users = {
   }
 }
 
-app.use(bodyParser.urlencoded({extended: true}));
-
 app.post("/register", (req, res) => {
   let userExists = false;
-  if (!req.body.email || !req.body.password){
+  if (!req.body.email || !req.body.password) {
     res.status(400);
     res.send("400: Email and password required!");
   } else {
     for (let user in users) {
       if (users[user].email === req.body.email) {
         userExists = true;
-      }; 
-    };
+      } 
+    }
   }
   if (!userExists) {
     let newID = generateRandomString();
-    const password = req.body.password;
-    const hashedPassword = bcrypt.hashSync(password, 10);
-    users[newID] = {};
-    users[newID].id = newID;
-    users[newID].email = req.body.email;
-    users[newID].password = hashedPassword;
+    // const password = req.body.password;
+    // const hashedPassword = bcrypt.hashSync(password, 10);
+    users[newID] = {
+      id: newID,
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 10),
+    };
+    // users[newID].id = newID;
+    // users[newID].email = req.body.email;
+    // users[newID].password = hashedPassword;
     req.session.user_id = newID;
     res.redirect("/urls");
   } else {
@@ -70,10 +82,11 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  if (req.session.user_id){
+  if (req.session.user_id) {
     res.redirect("/urls");
-  }
+  } else {
   res.redirect("/login");
+  }
 });
 
 app.post("/login", (req, res) => {
@@ -83,9 +96,9 @@ app.post("/login", (req, res) => {
     if (users[user].email === req.body.email && bcrypt.compareSync(req.body.password, users[user].password)) {
       userFound = true;
       userName = users[user].id;
-    }; 
+    }
   }
-  if (userFound){
+  if (userFound) {
     req.session.user_id = userName;
     res.redirect("/");
   } else {
@@ -100,21 +113,8 @@ app.get("/login", (req, res) => {
     loginPage: true,
     registerPage: false
   };
-  if (req.session.user_id) {
-    templateVars.user = users[req.session.user_id];
-  };
   res.render("login", templateVars);
 });
-
-const getUsersURLs = function(user_id) {
-  let idObj = {};
-  for (let shortURL in urlDatabase){
-    if (urlDatabase[shortURL].user === user_id){
-      idObj[shortURL] = urlDatabase[shortURL];
-    }
-  }
-  return idObj;
-}
 
 app.get("/urls", (req, res) => { 
   let userFound = false;
@@ -128,7 +128,7 @@ app.get("/urls", (req, res) => {
     templateVars.user = users[req.session.user_id];
     userFound = true;
   };
-  if (userFound){
+  if (userFound) {
     res.render("urls_index", templateVars);
   } else {
     res.status(401);
@@ -137,24 +137,22 @@ app.get("/urls", (req, res) => {
 });
 
 app.post(`/urls/:shortURL/update`, (req, res) => {
-  console.log("This is urlDatabase before update:", urlDatabase);
   let userFound = false;
-  if (req.session.user_id === urlDatabase[req.params.shortURL].user){
+  if (req.session.user_id === urlDatabase[req.params.shortURL].user) { 
     userFound = true;
   };
   if (userFound){
     urlDatabase[req.params.shortURL].longURL = req.body.longURL;
-    console.log("This is urlDatabase after update:", urlDatabase);
     res.redirect('/urls');
   } else {
     res.status(401);
     res.send("Error 401: Only the user who created this link can edit!");
-  };
+  }
 });
 
 app.post(`/urls/:shortURL/delete`, (req, res) => {
   let userFound = false;
-  if (req.session.user_id === urlDatabase[req.params.shortURL].user){
+  if (req.session.user_id === urlDatabase[req.params.shortURL].user) {
     userFound = true;
   };
   if (userFound){
@@ -163,14 +161,15 @@ app.post(`/urls/:shortURL/delete`, (req, res) => {
   } else {
     res.status(401);
     res.send("Error 401: Only the user who created this link can delete!");
-  };
+  }
 });
 
 app.post("/urls", (req, res) => {
   let newID = generateRandomString ();
-  urlDatabase[newID] = {};
-  urlDatabase[newID].longURL = req.body.longURL;
-  urlDatabase[newID].user = req.session.user_id;
+  urlDatabase[newID] = {
+    longURL: req.body.longURL,
+    user: req.session.user_id
+  };
   res.redirect("/urls");
 });
 
@@ -200,22 +199,21 @@ app.get("/urls/:id", (req, res) => {
     user_id: req.session.user_id,
     loginPage: false,
     registerPage: false
-  };
+  }
   if (req.session.user_id) {  
     templateVars.user = users[req.session.user_id];
     userFound = true;
-  };
+  }
   for (let shortID in urlDatabase) {
-    if (req.params.id === shortID){
+    if (req.params.id === shortID) {
       idFound = true;
     }
-  };
+  }
   if (idFound && userFound) {
     if (urlDatabase[req.params.id].user === req.session.user_id){
       match = true;
     }
-  };
-  console.log("This is idFound, userFound, match:", idFound, userFound, match)
+  }
   if (userFound && idFound && !match) {
     res.status(401);
     res.send("Error 401: you must sign in to see this page");
@@ -232,12 +230,10 @@ app.get("/urls/:id", (req, res) => {
 app.get("/register", (req, res) => {
   let templateVars = {
     user: "",
-    // user_id: req.session.user_id,
     loginPage: false,
     registerPage: true
   };
   if (req.session.user_id) {
-    // templateVars.user = users[req.session.user_id];
     res.redirect("/urls");
   } else {
   res.render("register", templateVars);
@@ -252,11 +248,11 @@ app.post("/logout", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   let urlFound = false;
   for (let id in urlDatabase) {
-    if (req.params.shortURL === id){
+    if (req.params.shortURL === id) {
       urlFound = true;
     }
   };
-  if (urlFound){
+  if (urlFound) {
   let link = urlDatabase[req.params.shortURL].longURL;
   res.redirect(link);
   } else {
