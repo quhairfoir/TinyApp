@@ -27,19 +27,36 @@ const getUsersURLs = function(user_id) {
   return idObj;
 };
 
+const getCurrentDate = function() {
+  let today = new Date();
+  let dd = today.getDate();
+  let mm = today.getMonth()+1;
+  const yyyy = today.getFullYear();
+  if (dd < 10) {
+    dd = "0" + dd;
+  }
+  if (mm < 10) {
+    mm = "0" + mm;
+  }
+  today = mm + "/" + dd + "/" + yyyy;
+  return today;
+}
+
 //unique visitors considered to be any non user that follows the link
 const urlDatabase = {
   "b2xVn2": { 
     longURL: "http://www.lighthouselabs.ca",
     user: "userRandomID",
     visitCount: 2,
-    uniqueVisitCount: 1
+    uniqueVisitCount: 1,
+    dateCreated: "08/01/2018"
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
     user: "user2RandomID",
     visitCount: 6,
-    uniqueVisitCount: 3
+    uniqueVisitCount: 3,
+    dateCreated: "07/31/2018"
   }
 };
 
@@ -174,7 +191,8 @@ app.post("/urls", (req, res) => {
     longURL: req.body.longURL,
     user: req.session.user_id,
     visitCount: 0,
-    uniqueVisitCount: 0
+    uniqueVisitCount: 0,
+    dateCreated: getCurrentDate()
   };
   res.redirect("/urls");
 });
