@@ -56,17 +56,22 @@ const users = {
 
 app.post("/register", (req, res) => {
   let userExists = false;
-  if (!req.body.email || !req.body.password) {
-    res.status(400);
-    res.send("400: Email and password required!");
-  } else {
+  let acceptableInput = false;
+  if (req.body.email && req.body.password) {
+    acceptableInput = true;
     for (let user in users) {
       if (users[user].email === req.body.email) {
         userExists = true;
       } 
     }
   }
-  if (!userExists) {
+  if (acceptableInput && userExists) {
+    res.status(409);
+    res.send("409: Email address already has user account.");
+  } else if (!acceptableInput) {
+    res.status(400);
+    res.send("400: Fields must be filled in.");
+  } else if (!userExists) {
     let newID = generateRandomString();
     users[newID] = {
       id: newID,
@@ -75,10 +80,7 @@ app.post("/register", (req, res) => {
     };
     req.session.user_id = newID;
     res.redirect("/urls");
-  } else {
-    res.status(409);
-    res.send("409: Email address already has user account.");
-  }
+  } 
 });
 
 app.get("/", (req, res) => {
