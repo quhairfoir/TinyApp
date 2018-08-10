@@ -42,20 +42,17 @@ const getCurrentDate = function() {
   return today;
 }
 
-//unique visitors considered to be any non user that follows the link
 const urlDatabase = {
   "b2xVn2": { 
     longURL: "http://www.lighthouselabs.ca",
     user: "userRandomID",
     visitCount: 2,
-    uniqueVisitCount: 1,
     dateCreated: "08/01/2018"
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
     user: "user2RandomID",
     visitCount: 6,
-    uniqueVisitCount: 3,
     dateCreated: "07/31/2018"
   }
 };
@@ -273,9 +270,6 @@ app.get("/u/:shortURL", (req, res) => {
     if (req.params.shortURL === id) {
       urlFound = true;
       urlDatabase[id].visitCount++;
-      if (!req.session.user_id) {
-        urlDatabase[id].uniqueVisitCount++;
-      }
     }
   }
   if (urlFound) {
