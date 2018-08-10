@@ -28,7 +28,7 @@
       </ul>
       <div>
         <p>Link created: <%= urls[shortURL].dateCreated %></p>
-        <p>This link has been visited <%= urls[shortURL].visitCount %> times by <%= urls[shortURL].uniqueVisitCount %> unique <% if (urls[shortURL].uniqueVisitCount === 1) { %> visitor<% } else { %> visitors<% } %>.</p>
+        <p>This link has been visited <%= urls[shortURL].visitCount %> times.</p>
       </div>
       <form method="POST" action=<%=`/urls/${shortURL}?_method=DELETE`%> >
         <input type="submit" value="Delete">
