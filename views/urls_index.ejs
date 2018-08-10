@@ -7,26 +7,26 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-    <% include partials/_header %>
 
-    <% if (user) { %>
-      <% for (let shortURL in urls) { %>
+  <% include partials/_header %>
+
+  <% if (user) { %>
+    <% for (let shortURL in urls) { %>
       <ul>
         <li>URL: <%= urls[shortURL].longURL %> and short form: <%= shortURL %></li>
       </ul>
-        <a href="/urls/<%= shortURL %>">Edit</a>
-        <form method="POST" action=<%=`/urls/${shortURL}/delete`%> >
-          <input type="submit" value="Delete">
-        </form>
-      
-      <% } %>
+      <a href="/urls/<%= shortURL %>">Edit</a>
+      <form method="POST" action=<%=`/urls/${shortURL}/delete`%> >
+        <input type="submit" value="Delete">
+      </form>
+    <% } %>
 
-      <a href="/urls/new">Create a shortURL!</a>
-    
-    
-    <% } else { %>
+    <a href="/urls/new">Create a shortURL!</a>
+  
+  
+  <% } else { %>
     <p>Register or login to create short urls.</p>
-   <% } %>
+  <% } %>
     
 </body>
 </html>
