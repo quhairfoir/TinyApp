@@ -2,12 +2,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcrypt");
+const methodOverride = require("method-override");
 
 const app = express();
 const PORT = 8000;
 
 app.set("view engine", "ejs");
 
+app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
   name: "session",
@@ -138,7 +140,7 @@ app.get("/urls", (req, res) => {
   }
 });
 
-app.post(`/urls/:shortURL/update`, (req, res) => {
+app.put(`/urls/:shortURL`, (req, res) => {
   let userFound = false;
   if (req.session.user_id === urlDatabase[req.params.shortURL].user) { 
     userFound = true;
@@ -152,7 +154,7 @@ app.post(`/urls/:shortURL/update`, (req, res) => {
   }
 });
 
-app.post(`/urls/:shortURL/delete`, (req, res) => {
+app.delete(`/urls/:shortURL`, (req, res) => {
   let userFound = false;
   if (req.session.user_id === urlDatabase[req.params.shortURL].user) {
     userFound = true;
