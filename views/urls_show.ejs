@@ -5,6 +5,16 @@
 <head>
   <meta charset="UTF-8">
   <title>TinyApp</title>
+  <style>
+      a:link {
+      color: lightseagreen; 
+      background-color: transparent; 
+      text-decoration: none;
+      }
+      a:hover {
+      color: plum;
+      }
+  </style>
 </head>
 <body style="font-size:20px; padding:50px;">
 
@@ -17,7 +27,7 @@
     Long URL: <%= urls[shortURL].longURL %>
   </div>
   
-  <form method="POST" action='/urls/<%= shortURL %>/update'>
+  <form method="POST" style="margin:150px;" action='/urls/<%= shortURL %>/update'>
     <label for="longURL">Change long URL:</label>
     <input id="longURL" type="text" name="longURL" style="width: 300px" value=<%= urls[shortURL].longURL %> >
     <input type="submit" value="Update">
