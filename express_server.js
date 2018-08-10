@@ -106,10 +106,20 @@ app.get("/login", (req, res) => {
   res.render("login", templateVars);
 });
 
+const getUsersURLs = function(user_id) {
+  let idObj = {};
+  for (let shortURL in urlDatabase){
+    if (urlDatabase[shortURL].user === user_id){
+      idObj[shortURL] = urlDatabase[shortURL];
+    }
+  }
+  return idObj;
+}
+
 app.get("/urls", (req, res) => { 
   let userFound = false;
   let templateVars = {
-    urls: urlDatabase,
+    urls: getUsersURLs(req.session.user_id),
     user: "",
     loginPage: false,
     registerPage: false

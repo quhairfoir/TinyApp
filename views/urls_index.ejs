@@ -10,18 +10,16 @@
     <% include partials/_header %>
 
     <% if (user) { %>
+      <% for (let shortURL in urls) { %>
       <ul>
-      <% for (let shortURL in urls) { 
-        if (urls[shortURL].user === user.id) { %>
-
-          <%= shortURL.user %>
         <li>URL: <%= urls[shortURL].longURL %> and short form: <%= shortURL %></li>
       </ul>
         <a href="/urls/<%= shortURL %>">Edit</a>
         <form method="POST" action=<%=`/urls/${shortURL}/delete`%> >
           <input type="submit" value="Delete">
         </form>
-      <% }} %>
+      
+      <% } %>
 
       <a href="/urls/new">Create a shortURL!</a>
     
