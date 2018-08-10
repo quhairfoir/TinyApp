@@ -225,8 +225,6 @@ app.get("/urls/:id", (req, res) => {
   }
 });
 
-
-
 app.get("/register", (req, res) => {
   let templateVars = {
     user: "",
