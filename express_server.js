@@ -70,17 +70,26 @@ const users = {
   }
 }
 
-app.post("/register", (req, res) => {
-  let userExists = false;
-  let acceptableInput = false;
-  if (req.body.email && req.body.password) {
-    acceptableInput = true;
-    for (let user in users) {
-      if (users[user].email === req.body.email) {
-        userExists = true;
-      } 
+//validates for AND 
+const andValidate = function (condition1, condition2) {
+  if (condition1 && condition2) {
+    return true;
+  }
+  return false;
+}
+
+const findInUsers = function (key, value) {
+  for (let user in users){
+    if (users[user][key] === value){
+      return true;
     }
   }
+  return false;
+}
+
+app.post("/register", (req, res) => {
+  let userExists = findInUsers("email", req.body.email);
+  let acceptableInput = andValidate(req.body.email, req.body.password);
   if (!acceptableInput) {
     res.status(400);
     res.send("400: Fields must be filled in.");
@@ -154,12 +163,13 @@ app.get("/urls", (req, res) => {
   }
 });
 
+// only the user who created a link has access to that link's page
 app.put(`/urls/:shortURL`, (req, res) => {
-  let userFound = false;
+  let userMatch = false;
   if (req.session.user_id === urlDatabase[req.params.shortURL].user) { 
-    userFound = true;
+    userMatch = true;
   };
-  if (userFound){
+  if (userMatch){
     urlDatabase[req.params.shortURL].longURL = req.body.longURL;
     res.redirect('/urls');
   } else {
