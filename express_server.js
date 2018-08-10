@@ -28,11 +28,13 @@ const getUsersURLs = function(user_id) {
 const urlDatabase = {
   "b2xVn2": { 
     longURL: "http://www.lighthouselabs.ca",
-    user: "userRandomID"
+    user: "userRandomID",
+    count: 2
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
-    user: "user2RandomID"
+    user: "user2RandomID",
+    count: 6
   }
 };
 
@@ -163,7 +165,8 @@ app.post("/urls", (req, res) => {
   let newID = generateRandomString ();
   urlDatabase[newID] = {
     longURL: req.body.longURL,
-    user: req.session.user_id
+    user: req.session.user_id,
+    count: 0
   };
   res.redirect("/urls");
 });
@@ -189,7 +192,7 @@ app.get("/urls/:id", (req, res) => {
   let match = false;
   let templateVars = { 
     shortURL: req.params.id,
-    urls: urlDatabase,
+    urls: getUsersURLs(req.session.user_id),
     user: "",
     user_id: req.session.user_id,
     loginPage: false,
@@ -243,11 +246,12 @@ app.get("/u/:shortURL", (req, res) => {
   for (let id in urlDatabase) {
     if (req.params.shortURL === id) {
       urlFound = true;
+      urlDatabase[id].count++;
     }
   };
   if (urlFound) {
-  let link = urlDatabase[req.params.shortURL].longURL;
-  res.redirect(link);
+    let link = urlDatabase[req.params.shortURL].longURL;
+    res.redirect(link);
   } else {
     res.status(404);
     res.send("Error 404: page not found");
