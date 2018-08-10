@@ -27,10 +27,11 @@
     Long URL: <%= urls[shortURL].longURL %>
   </div>
   <div>
+    <p>Link created: <%= urls[shortURL].dateCreated %></p>
     <p>This link has been visited <%= urls[shortURL].visitCount %> times.</p>
   </div>
   
-  <form method="POST" style="margin:150px;" action=<%=`/urls/${shortURL}?_method=PUT`%>>
+  <form method="POST" style="margin:75px;" action=<%=`/urls/${shortURL}?_method=PUT`%>>
     <label for="longURL">Change long URL:</label>
     <input id="longURL" type="text" name="longURL" style="width: 300px" value=<%= urls[shortURL].longURL %> >
     <input type="submit" value="Update">
