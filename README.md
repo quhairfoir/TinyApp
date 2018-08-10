@@ -12,8 +12,8 @@ TinyApp is a full stack web application built with Node and Express that allows 
 - cookie-session
 
 ## Screenshots
-!["Urls Page"](https://github.com/quhairfoir/TinyApp/blob/master/docs/urls_page.png?raw=true)
-!["Urls edit page"](https://github.com/quhairfoir/TinyApp/blob/master/docs/urls_id_page.png?raw=true)
+!["Urls Page"](https://github.com/quhairfoir/TinyApp/blob/master/docs/urls-page.png?raw=true)
+!["Urls edit page"](https://github.com/quhairfoir/TinyApp/blob/master/docs/urls-id-page.png?raw=true)
 
 ## Getting Started
 
