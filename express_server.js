@@ -65,13 +65,13 @@ app.post("/register", (req, res) => {
       } 
     }
   }
-  if (acceptableInput && userExists) {
-    res.status(409);
-    res.send("409: Email address already has user account.");
-  } else if (!acceptableInput) {
+  if (!acceptableInput) {
     res.status(400);
     res.send("400: Fields must be filled in.");
-  } else if (!userExists) {
+  } else if (userExists) {
+    res.status(409);
+    res.send("409: Email address already has user account.");
+  } else {
     let newID = generateRandomString();
     users[newID] = {
       id: newID,
