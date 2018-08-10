@@ -25,6 +25,9 @@
       <ul>
         <li><a href=<%=`/u/${shortURL}`%>> <%= shortURL %> </a>: <%= urls[shortURL].longURL %> </li>
       </ul>
+      <div>
+        <p>This link has been visited <%= urls[shortURL].visitCount %> times by <%= urls[shortURL].uniqueVisitCount %> unique <% if (urls[shortURL].uniqueVisitCount === 1) { %> visitor<% } else { %> visitors<% } %>.</p>
+      </div>
       <form method="POST" action=<%=`/urls/${shortURL}/delete`%> >
         <input type="submit" value="Delete">
       </form>
@@ -33,7 +36,7 @@
       </form>
     <% } %>
 
-    <a href="/urls/new">Create a shortURL</a>
+    <a href="/urls/new">Create a New Short Link</a>
   
   
   <% } else { %>
