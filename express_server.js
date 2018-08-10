@@ -63,16 +63,11 @@ app.post("/register", (req, res) => {
   }
   if (!userExists) {
     let newID = generateRandomString();
-    // const password = req.body.password;
-    // const hashedPassword = bcrypt.hashSync(password, 10);
     users[newID] = {
       id: newID,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 10),
     };
-    // users[newID].id = newID;
-    // users[newID].email = req.body.email;
-    // users[newID].password = hashedPassword;
     req.session.user_id = newID;
     res.redirect("/urls");
   } else {
