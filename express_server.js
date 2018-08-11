@@ -220,6 +220,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
+
   let userFound = false;
   let idFound = false;
   let match = false;
@@ -231,15 +232,19 @@ app.get("/urls/:id", (req, res) => {
     loginPage: false,
     registerPage: false
   }
+  // find presence of authenticated user
   if (req.session.user_id) {  
     templateVars.user = users[req.session.user_id];
+      if ()
     userFound = true;
   }
+  // find presence of shortURL entry
   for (let shortID in urlDatabase) {
     if (req.params.id === shortID) {
       idFound = true;
     }
   }
+  // check if user owns shortURL
   if (idFound && userFound) {
     if (urlDatabase[req.params.id].user === req.session.user_id){
       match = true;
@@ -275,16 +280,21 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  let urlFound = false;
+  let shortURLFound = false;
   for (let id in urlDatabase) {
     if (req.params.shortURL === id) {
-      urlFound = true;
+      shortURLFound = true;
       urlDatabase[id].visitCount++;
     }
   }
-  if (urlFound) {
+  if (shortURLFound) {
+    if (urlDatabase[req.params.shortURL].longURL){
     let link = urlDatabase[req.params.shortURL].longURL;
     res.redirect(link);
+    } else {
+      res.status(404);
+      res.send("Error 404: page not found");
+    }
   } else {
     res.status(404);
     res.send("Error 404: page not found");
