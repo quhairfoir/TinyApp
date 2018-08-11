@@ -235,7 +235,6 @@ app.get("/urls/:id", (req, res) => {
   // find presence of authenticated user
   if (req.session.user_id) {  
     templateVars.user = users[req.session.user_id];
-      if ()
     userFound = true;
   }
   // find presence of shortURL entry
